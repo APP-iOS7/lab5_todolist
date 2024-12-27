@@ -74,7 +74,9 @@ function addTodo(text, checked = false) {
         const newText = inputElement.value.trim();
         if (newText) {
           // 텍스트 업데이트
-          spanElement.textContent = newText;
+          if (newText && newText.trim() !== ''){
+            spanElement.textContent = newText;
+          }
   
           // localStorage 업데이트
           const todos = loadTodos();
