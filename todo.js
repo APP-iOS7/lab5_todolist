@@ -42,6 +42,41 @@ function addTodo(text, checked = false) {
     saveTodos(todos);
   });
 
+  // 수정 버튼 추가
+  const editButton = document.createElement('button');
+  editButton.classList.add('btn', 'btn-warning', 'btn-sm', 'ms-2');
+  editButton.textContent = '수정';
+  editButton.addEventListener('click', () => {
+    const inputField = document.createElement('input');
+    inputField.type = 'text';
+    inputField.value = spanElement.textContent;
+    inputField.classList.add('form-control', 'form-control-sm', 'ms-2');
+
+    const confirmButton = document.createElement('button');
+    confirmButton.classList.add('btn', 'btn-success', 'btn-sm', 'ms-2');
+    confirmButton.textContent = '확인';
+
+    confirmButton.addEventListener('click', () => {
+      const updatedText = inputField.value;
+      spanElement.textContent = updatedText;
+
+      // localStorage 업데이트
+      const todos = loadTodos();
+      const index = Array.from(li.parentElement.children).indexOf(li);
+      todos[index].text = updatedText;
+      inputField.replaceWith(spanElement);
+      saveTodos(todos);
+
+      inputField.replaceWith(spanElement);
+      confirmButton.after(editButton);
+      confirmButton.remove();
+    });
+
+    spanElement.replaceWith(inputField);
+    editButton.after(confirmButton);
+    editButton.remove();
+  });
+
   // 삭제 버튼 추가
   const deleteButton = document.createElement('button');
   deleteButton.classList.add('btn', 'btn-danger', 'btn-sm', 'ms-2');
@@ -58,6 +93,7 @@ function addTodo(text, checked = false) {
 
   li.prepend(checkbox);
   li.append(spanElement);
+  li.append(editButton);
   li.append(deleteButton);
   todoListElement.append(li);
 }
