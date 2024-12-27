@@ -42,9 +42,14 @@ function addTodo(text, checked = false) {
     saveTodos(todos);
   });
 
+  // 수정 기능 연결
+  spanElement.addEventListener('dblclick', () => {
+    editTodo(li, spanElement);
+  });
+
   // 삭제 버튼 추가
   const deleteButton = document.createElement('button');
-  deleteButton.classList.add('btn', 'btn-danger', 'btn-sm', 'ms-2');
+  deleteButton.classList.add('btn', 'btn-danger', 'btn-sm', 'ms-1');
   deleteButton.textContent = '삭제';
   deleteButton.addEventListener('click', () => {
     // localStorage 업데이트
@@ -71,6 +76,53 @@ function loadTodos() {
 // localStorage에 할일 목록 저장하기
 function saveTodos(todos) {
   localStorage.setItem('todoList', JSON.stringify(todos));
+}
+
+// 수정 함수
+function editTodo(li, spanElement){
+  // 기존 텍스트를 저장 (수정을 취소하거나 참조할 때 사용)
+  const originalText = spanElement.textContent;
+
+  // 더블 클릭 시 input 필드 생성
+  const inputElement = document.createElement('input');
+  inputElement.type = 'text';
+  inputElement.value = originalText; // 기존 텍스트를 입력 필드에 설정
+  inputElement.classList.add('form-control', 'ms-2', 'flex-grow-2');
+  inputElement.style.width = '85%';
+
+  // 입력 필드로 기존 텍스트 요소(span)를 교체
+  li.replaceChild(inputElement, spanElement); // li 요소의 자식을 input으로 교체
+  inputElement.focus(); // 입력 필드에 포커스를 설정하여 바로 수정 가능
+
+  // 수정 저장 함수 (입력값 저장 및 화면 반영)
+  const saveEdit = () => {
+    const newValue = inputElement.value.trim();
+    if (newValue === '') {
+      alert('내용을 입력하세요!');
+      return;
+    }
+
+    // LocalStorage에서 기존 할 일 데이터를 가져오기
+    const todos = loadTodos();
+    const index = Array.from(li.parentElement.children).indexOf(li); 
+    todos[index].text = newValue;
+    saveTodos(todos); // 업데이트된 할 일 목록을 LocalStorage에 저장
+
+    // 입력 필드를 텍스트(span) 요소로 복구
+    spanElement.textContent = newValue;
+    li.replaceChild(spanElement, inputElement);
+  };
+
+  // 입력 필드에서 포커스가 벗어날 때 수정 저장
+  inputElement.addEventListener('blur', saveEdit);
+
+  // 입력 필드에서 Enter 키를 눌렀을 때 수정 저장
+  inputElement.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      saveEdit(); // Enter 키 입력 시 saveEdit 호출
+    }
+  });
+
 }
 
 // 초기화 함수
