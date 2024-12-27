@@ -16,6 +16,7 @@ function deleteTodo(index) {}
 
 // ----- 할 일 수정 기능 -----
 // 특정 할 일을 수정하는 함수
+
 function editTodo(index, newText) {
   console.log('editTodo', index, newText);
 }
