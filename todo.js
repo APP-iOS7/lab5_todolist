@@ -55,7 +55,7 @@ function addTodo(text, checked = false) {
     // 요소 삭제
     li.remove();
   });
-  
+
   // 수정 버튼 추가
   const editButton = document.createElement('button');
   editButton.classList.add('btn', 'btn-primary', 'btn-sm', 'ms-2'); // 스타일 추가
@@ -67,37 +67,41 @@ function addTodo(text, checked = false) {
     inputElement.type = 'text';
     inputElement.classList.add('form-control', 'ms-2', 'flex-grow-1');
     inputElement.value = spanElement.textContent;
-  
+
+    inputElement.focus(); // 입력 필드에 포커스를 설정하여 바로 수정 가능
+
     // 엔터 키를 눌렀을 때 저장
     inputElement.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         const newText = inputElement.value.trim();
         if (newText) {
           // 텍스트 업데이트
-          spanElement.textContent = newText;
-  
+          if (newText && newText.trim() !== '') {
+            spanElement.textContent = newText;
+          }
+
           // localStorage 업데이트
           const todos = loadTodos();
           const index = Array.from(li.parentElement.children).indexOf(li);
           todos[index].text = newText;
           saveTodos(todos);
-  
+
           // input 요소를 span 요소로 교체
           li.replaceChild(spanElement, inputElement);
         }
       }
     });
-  
+
     // 수정 취소: 포커스 잃으면 원래 텍스트로 돌아감
     inputElement.addEventListener('blur', () => {
       li.replaceChild(spanElement, inputElement);
     });
-  
+
     // span 요소를 input 요소로 교체
     li.replaceChild(inputElement, spanElement);
     inputElement.focus();
   });
-  
+
 
   li.prepend(checkbox);
   li.append(spanElement);
