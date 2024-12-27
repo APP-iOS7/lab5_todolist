@@ -45,7 +45,7 @@ function addTodo(text, checked = false) {
   // 삭제 버튼 추가
   const deleteButton = document.createElement('button');
   deleteButton.classList.add('btn', 'btn-danger', 'btn-sm', 'ms-2');
-  deleteButton.textContent = '삭제';
+  deleteButton.innerHTML = '<i class="bi bi-trash"></i>';
   deleteButton.addEventListener('click', () => {
     // localStorage 업데이트
     const todos = loadTodos();
@@ -56,11 +56,55 @@ function addTodo(text, checked = false) {
     li.remove();
   });
 
+  const editButton = document.createElement('button');
+  editButton.classList.add('btn', 'btn-primary', 'btn-sm', 'ms-2'); // 스타일 추가
+  editButton.innerHTML = '<i class="bi bi-pencil"></i>';
+
+  editButton.addEventListener('click', () => {
+    // 인라인 수정 시작
+    const inputElement = document.createElement('input');
+    inputElement.type = 'text';
+    inputElement.classList.add('form-control', 'ms-2', 'flex-grow-1');
+    inputElement.value = spanElement.textContent;
+  
+    // 엔터 키를 눌렀을 때 저장
+    inputElement.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const newText = inputElement.value.trim();
+        if (newText) {
+          // 텍스트 업데이트
+          spanElement.textContent = newText;
+  
+          // localStorage 업데이트
+          const todos = loadTodos();
+          const index = Array.from(li.parentElement.children).indexOf(li);
+          todos[index].text = newText;
+          saveTodos(todos);
+  
+          // input 요소를 span 요소로 교체
+          li.replaceChild(spanElement, inputElement);
+        }
+      }
+    });
+  
+    // 수정 취소: 포커스 잃으면 원래 텍스트로 돌아감
+    inputElement.addEventListener('blur', () => {
+      li.replaceChild(spanElement, inputElement);
+    });
+  
+    // span 요소를 input 요소로 교체
+    li.replaceChild(inputElement, spanElement);
+    inputElement.focus();
+  });
+  
+
   li.prepend(checkbox);
   li.append(spanElement);
   li.append(deleteButton);
+  li.append(editButton);
   todoListElement.append(li);
 }
+
 
 // localStorage에서 할일 목록 가져오기
 function loadTodos() {
