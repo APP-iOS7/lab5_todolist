@@ -58,7 +58,10 @@ function addTodo(text, checked = false) {
 
     confirmButton.addEventListener('click', () => {
       const updatedText = inputField.value;
-      spanElement.textContent = updatedText;
+      if (updatedText && updatedText.trim() !== ''){
+        spanElement.textContent = updatedText;
+      }
+      
 
       // localStorage 업데이트
       const todos = loadTodos();
