@@ -16,7 +16,10 @@ function deleteTodo(index) {}
 
 // ----- 할 일 수정 기능 -----
 // 특정 할 일을 수정하는 함수
-function editTodo(index, newText) {}
+
+function editTodo(index, newText) {
+  console.log('editTodo', index, newText);
+}
 
 // ----- 체크박스 상태 변경 기능 -----
 // 할 일 완료/미완료 상태를 토글하는 함수
