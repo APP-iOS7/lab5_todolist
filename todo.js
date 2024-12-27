@@ -76,7 +76,7 @@ function addTodo(text, checked = false) {
         const newText = inputElement.value.trim();
         if (newText) {
           // 텍스트 업데이트
-          if (newText && newText.trim() !== '') {
+          if (newText && newText.trim() !== ''){
             spanElement.textContent = newText;
           }
 
